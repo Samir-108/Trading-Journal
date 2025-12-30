@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load learning_extras %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row g-4 animate-fade-up">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="glass-card h-100 p-0 overflow-hidden">
+                <div class="p-4 border-bottom bg-light bg-opacity-50">
+                    <a href="{% url 'course_detail' course.pk %}"
+                        class="text-decoration-none text-muted small mb-2 d-block">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Course
+                    </a>
+                    <h5 class="fw-bold text-primary mb-0">{{ course.title }}</h5>
+                </div>
+                <div class="list-group list-group-flush overflow-auto" style="max-height: calc(100vh - 250px);">
+                    {% for l in course.lessons.all %}
+                    <a href="{% url 'lesson_detail' course.pk l.pk %}"
+                        class="list-group-item list-group-item-action border-0 py-3 px-4 {% if l.pk == lesson.pk %}active bg-primary bg-opacity-10 text-primary border-start border-4 border-primary{% endif %}">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-muted d-block mb-1">Lesson {{ l.order }}</small>
+                                <span class="fw-bold">{{ l.title }}</span>
+                            </div>
+                            {% if l.content_type == 'VIDEO' %}
+                            <i class="bi bi-play-circle"></i>
+                            {% elif l.content_type == 'LINK' %}
+                            <i class="bi bi-link-45deg"></i>
+                            {% else %}
+                            <i class="bi bi-file-text"></i>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="glass-card p-5 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="fw-bold text-primary mb-0">{{ lesson.title }}</h1>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                        <i class="bi bi-clock me-1"></i> {{ lesson.duration_minutes }} min
+                    </span>
+                </div>
+
+                <!-- Dynamic Content Rendering -->
+                <div class="lesson-content mb-5">
+                    {% if lesson.content_type == 'VIDEO' %}
+                    <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow-lg mb-4">
+                        <iframe src="{{ lesson.video_url|youtube_embed }}" title="YouTube video" allowfullscreen
+                            referrerpolicy="origin"></iframe>
+                    </div>
+                    {% if lesson.content %}
+                    <div class="mt-4 markdown-body">
+                        {{ lesson.content|markdown }}
+                    </div>
+                    {% endif %}
+
+                    {% elif lesson.content_type == 'LINK' %}
+                    <div class="glass-card p-5 text-center bg-light bg-opacity-50 border-primary border-opacity-25">
+                        <i class="bi bi-link-45deg fs-1 text-primary mb-3"></i>
+                        <h3 class="fw-bold mb-3">External Resource</h3>
+                        <p class="text-muted mb-4">This lesson involves an external resource. Click the button below to
+                            access it.</p>
+                        <a href="{{ lesson.external_link }}" target="_blank" class="btn btn-primary btn-lg px-5">
+                            Open Resource <i class="bi bi-box-arrow-up-right ms-2"></i>
+                        </a>
+                        {% if lesson.content %}
+                        <div class="mt-5 text-start markdown-body">
+                            {{ lesson.content|markdown }}
+                        </div>
+                        {% endif %}
+
+                        {% else %}
+                        <!-- Text/Markdown Content -->
+                        <div class="markdown-body">
+                            {{ lesson.content|markdown }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="d-flex justify-content-between pt-4 border-top">
+                        {% if prev_lesson %}
+                        <a href="{% url 'lesson_detail' course.pk prev_lesson.pk %}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i> Previous Lesson
+                        </a>
+                        {% else %}
+                        <button class="btn btn-outline-secondary" disabled>Previous Lesson</button>
+                        {% endif %}
+
+                        {% if next_lesson %}
+                        <a href="{% url 'lesson_detail' course.pk next_lesson.pk %}" class="btn btn-primary">
+                            Next Lesson <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'course_detail' course.pk %}" class="btn btn-success">
+                            Complete Course <i class="bi bi-check-circle ms-2"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

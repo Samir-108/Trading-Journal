@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section" style="padding: 6rem 0 4rem;">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5 animate-fade-up">
+            <h1 class="display-4 fw-bold mb-3">Simple, Transparent <span class="gradient-text">Pricing</span></h1>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">
+                Choose the plan that fits your trading journey. All plans include core features.
+            </p>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="row g-4 justify-content-center">
+            <!-- Free Plan -->
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-100">
+                <div class="glass-card p-5 h-100">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold mb-2">Starter</h3>
+                        <p class="text-muted">Perfect for beginners</p>
+                        <div class="my-4">
+                            <h2 class="display-4 fw-bold text-primary mb-0">Free</h2>
+                            <p class="text-muted">Forever</p>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Up to 50 trades/month
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Basic analytics</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Portfolio tracking
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 1 trading strategy
+                        </li>
+                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> Advanced charts</li>
+                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> Export data</li>
+                    </ul>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary w-100 py-3">Get Started</a>
+                </div>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-200">
+                <div class="glass-card p-5 h-100 border-primary position-relative"
+                    style="border-width: 2px !important;">
+                    <div class="position-absolute top-0 start-50 translate-middle">
+                        <span class="badge bg-primary px-4 py-2">Most Popular</span>
+                    </div>
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold mb-2">Professional</h3>
+                        <p class="text-muted">For serious traders</p>
+                        <div class="my-4">
+                            <h2 class="display-4 fw-bold text-primary mb-0">Rs. 999</h2>
+                            <p class="text-muted">per month</p>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Unlimited trades</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Advanced analytics
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Portfolio tracking
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Unlimited strategies
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Advanced charts</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Export data (CSV,
+                            PDF)</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Priority support</li>
+                    </ul>
+                    <a href="{% url 'register' %}" class="btn btn-primary w-100 py-3">Start Free Trial</a>
+                </div>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-300">
+                <div class="glass-card p-5 h-100">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold mb-2">Enterprise</h3>
+                        <p class="text-muted">For trading teams</p>
+                        <div class="my-4">
+                            <h2 class="display-4 fw-bold text-primary mb-0">Custom</h2>
+                            <p class="text-muted">Contact us</p>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Everything in Pro
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Team collaboration
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Custom integrations
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Dedicated support
+                        </li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Custom training</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> API access</li>
+                    </ul>
+                    <a href="{% url 'support' %}" class="btn btn-outline-primary w-100 py-3">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="mt-5 pt-5 text-center">
+            <h3 class="fw-bold mb-4">Frequently Asked Questions</h3>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6">
+                    <div class="glass-card p-4 text-start">
+                        <h5 class="fw-bold mb-2">Can I switch plans anytime?</h5>
+                        <p class="text-muted mb-0">Yes! You can upgrade or downgrade your plan at any time. Changes take
+                            effect immediately.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="glass-card p-4 text-start">
+                        <h5 class="fw-bold mb-2">Is there a free trial?</h5>
+                        <p class="text-muted mb-0">Professional plan includes a 14-day free trial. No credit card
+                            required.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

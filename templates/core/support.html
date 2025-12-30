@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block auth_content %}
+<div class="hero-section" style="padding: 6rem 0 4rem;">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5 animate-fade-up">
+            <h1 class="display-4 fw-bold mb-3">How Can We <span class="gradient-text">Help?</span></h1>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">
+                Get the support you need to succeed in your trading journey
+            </p>
+        </div>
+
+        <!-- Support Options -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-100">
+                <div class="glass-card p-5 text-center h-100">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Live Chat</h4>
+                    <p class="text-muted mb-4">Get instant answers from our support team</p>
+                    <button class="btn btn-primary">Start Chat</button>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-200">
+                <div class="glass-card p-5 text-center h-100">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Email Support</h4>
+                    <p class="text-muted mb-4">Send us your questions anytime</p>
+                    <a href="mailto:support@nepsejournal.com" class="btn btn-outline-primary">Send Email</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-300">
+                <div class="glass-card p-5 text-center h-100">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Documentation</h4>
+                    <p class="text-muted mb-4">Browse our comprehensive guides</p>
+                    <a href="#" class="btn btn-outline-primary">View Docs</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="mb-4">
+            <h3 class="fw-bold text-center mb-5">Frequently Asked Questions</h3>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    {% for i in "12345" %}
+                    <div class="glass-card mb-3">
+                        <div class="accordion-header">
+                            <button
+                                class="accordion-button {% if forloop.counter != 1 %}collapsed{% endif %} bg-transparent border-0 fw-bold"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ forloop.counter }}">
+                                How do I get started with Nepse Trade Journal?
+                            </button>
+                        </div>
+                        <div id="faq{{ forloop.counter }}"
+                            class="accordion-collapse collapse {% if forloop.counter == 1 %}show{% endif %}"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Simply create a free account, set up your portfolio with initial capital, and start
+                                logging your trades. Our intuitive interface makes it easy to track every aspect of your
+                                trading journey.
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="mt-5 pt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="glass-card p-5">
+                        <h3 class="fw-bold text-center mb-4">Still Have Questions?</h3>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" placeholder="Your name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" placeholder="your@email.com">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Subject</label>
+                                    <input type="text" class="form-control" placeholder="How can we help?">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Message</label>
+                                    <textarea class="form-control" rows="5"
+                                        placeholder="Describe your issue or question..."></textarea>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

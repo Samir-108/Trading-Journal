@@ -1,0 +1,150 @@
+<!-- Enhanced Notification System -->
+<div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <!-- Notifications will be dynamically added here -->
+</div>
+
+<!-- Toast Template -->
+<template id="toastTemplate">
+    <div class="toast align-items-center border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center">
+                <i class="toast-icon me-3 fs-5"></i>
+                <div class="toast-content">
+                    <div class="toast-title fw-bold mb-1"></div>
+                    <div class="toast-message text-muted small"></div>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</template>
+
+<script>
+class NotificationSystem {
+    constructor() {
+        this.container = document.getElementById('notificationContainer');
+        this.template = document.getElementById('toastTemplate');
+    }
+
+    show(type, title, message, duration = 5000) {
+        const toast = this.createToast(type, title, message);
+        this.container.appendChild(toast);
+        
+        const bsToast = new bootstrap.Toast(toast, {
+            delay: duration,
+            autohide: true
+        });
+        
+        bsToast.show();
+        
+        // Remove from DOM after hiding
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
+    }
+
+    createToast(type, title, message) {
+        const toastElement = this.template.content.cloneNode(true);
+        const toast = toastElement.querySelector('.toast');
+        const icon = toastElement.querySelector('.toast-icon');
+        const titleElement = toastElement.querySelector('.toast-title');
+        const messageElement = toastElement.querySelector('.toast-message');
+
+        // Set content
+        titleElement.textContent = title;
+        messageElement.textContent = message;
+
+        // Set type-specific styling
+        switch (type) {
+            case 'success':
+                toast.classList.add('bg-success', 'text-white');
+                icon.className = 'toast-icon me-3 fs-5 bi bi-check-circle-fill';
+                break;
+            case 'error':
+                toast.classList.add('bg-danger', 'text-white');
+                icon.className = 'toast-icon me-3 fs-5 bi bi-x-circle-fill';
+                break;
+            case 'warning':
+                toast.classList.add('bg-warning', 'text-dark');
+                icon.className = 'toast-icon me-3 fs-5 bi bi-exclamation-triangle-fill';
+                break;
+            case 'info':
+                toast.classList.add('bg-info', 'text-white');
+                icon.className = 'toast-icon me-3 fs-5 bi bi-info-circle-fill';
+                break;
+            default:
+                toast.classList.add('bg-primary', 'text-white');
+                icon.className = 'toast-icon me-3 fs-5 bi bi-bell-fill';
+        }
+
+        return toast;
+    }
+
+    success(title, message) {
+        this.show('success', title, message);
+    }
+
+    error(title, message) {
+        this.show('error', title, message);
+    }
+
+    warning(title, message) {
+        this.show('warning', title, message);
+    }
+
+    info(title, message) {
+        this.show('info', title, message);
+    }
+}
+
+// Initialize global notification system
+window.notifications = new NotificationSystem();
+
+// Example usage functions
+function showSuccessNotification(title, message) {
+    window.notifications.success(title, message);
+}
+
+function showErrorNotification(title, message) {
+    window.notifications.error(title, message);
+}
+
+function showWarningNotification(title, message) {
+    window.notifications.warning(title, message);
+}
+
+function showInfoNotification(title, message) {
+    window.notifications.info(title, message);
+}
+</script>
+
+<style>
+.toast {
+    min-width: 350px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.toast-body {
+    padding: 1rem;
+}
+
+.toast-content {
+    flex-grow: 1;
+}
+
+.toast-title {
+    font-size: 0.95rem;
+}
+
+.toast-message {
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 576px) {
+    .toast {
+        min-width: 280px;
+    }
+}
+</style>

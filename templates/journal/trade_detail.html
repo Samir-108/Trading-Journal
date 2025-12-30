@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center animate-fade-up">
+        <div class="col-lg-10">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb bg-transparent p-0">
+                    <li class="breadcrumb-item"><a href="{% url 'trade_list' %}" class="text-decoration-none"><i
+                                class="bi bi-house-door me-1"></i>Journal</a></li>
+                    <li class="breadcrumb-item active">Trade Details</li>
+                </ol>
+            </nav>
+
+            <!-- Trade Header -->
+            <div class="glass-card p-5 mb-4">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <h1 class="fw-bold text-primary mb-0">{{ trade.symbol }}</h1>
+                            <span
+                                class="badge {% if trade.trade_type == 'BUY' %}bg-success{% else %}bg-danger{% endif %} bg-opacity-10 {% if trade.trade_type == 'BUY' %}text-success{% else %}text-danger{% endif %} rounded-pill px-3 py-2">
+                                <i
+                                    class="bi {% if trade.trade_type == 'BUY' %}bi-arrow-up-circle{% else %}bi-arrow-down-circle{% endif %} me-1"></i>
+                                {{ trade.trade_type }}
+                            </span>
+                            <span
+                                class="badge {% if trade.status == 'OPEN' %}bg-primary{% else %}bg-secondary{% endif %} bg-opacity-10 {% if trade.status == 'OPEN' %}text-primary{% else %}text-secondary{% endif %} rounded-pill px-3 py-2">
+                                {{ trade.status }}
+                            </span>
+                        </div>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            {{ trade.entry_date|date:"F d, Y - h:i A" }}
+                        </p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                        {% if trade.pnl %}
+                        <p class="text-uppercase small fw-bold text-muted mb-2">Profit/Loss</p>
+                        <h2
+                            class="display-4 fw-bold {% if trade.pnl > 0 %}text-success{% elif trade.pnl < 0 %}text-danger{% else %}text-muted{% endif %} mb-0">
+                            {% if trade.pnl > 0 %}+{% endif %}Rs. {{ trade.pnl }}
+                        </h2>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade Details -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="glass-card p-4 h-100">
+                        <h5 class="fw-bold text-primary mb-4">Entry Details</h5>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Entry Price</p>
+                                <p class="fw-bold mb-0">Rs. {{ trade.entry_price }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Quantity</p>
+                                <p class="fw-bold mb-0">{{ trade.quantity }} units</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Stop Loss</p>
+                                <p class="fw-bold mb-0">{% if trade.stop_loss %}Rs. {{ trade.stop_loss }}{% else %}-{%
+                                    endif %}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Target</p>
+                                <p class="fw-bold mb-0">{% if trade.target %}Rs. {{ trade.target }}{% else %}-{% endif
+                                    %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="glass-card p-4 h-100">
+                        <h5 class="fw-bold text-primary mb-4">Exit Details</h5>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Exit Price</p>
+                                <p class="fw-bold mb-0">{% if trade.exit_price %}Rs. {{ trade.exit_price }}{% else %}-{%
+                                    endif %}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Exit Date</p>
+                                <p class="fw-bold mb-0">{% if trade.exit_date %}{{ trade.exit_date|date:"M d, Y" }}{%
+                                    else %}-{% endif %}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Strategy</p>
+                                <p class="fw-bold mb-0">{{ trade.strategy.name|default:"-" }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted small mb-1">Emotion</p>
+                                <p class="fw-bold mb-0">{{ trade.get_emotion_display }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            {% if trade.notes %}
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-3">Notes</h5>
+                <p class="text-muted mb-0">{{ trade.notes }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="d-flex gap-2 justify-content-end">
+                <a href="{% url 'trade_update' trade.pk %}" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil me-2"></i>Edit
+                </a>
+                <a href="{% url 'trade_delete' trade.pk %}" class="btn btn-outline-danger">
+                    <i class="bi bi-trash me-2"></i>Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

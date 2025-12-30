@@ -1,0 +1,30 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f093fb"/>
+      <stop offset="100%" stop-color="#f5576c"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="200" cy="150" r="120" fill="url(#grad3)" opacity="0.1"/>
+  
+  <!-- Pie Chart -->
+  <circle cx="200" cy="150" r="80" fill="#f8fafc" stroke="#f093fb" stroke-width="3"/>
+  
+  <!-- Pie Segments -->
+  <path d="M 200 150 L 200 70 A 80 80 0 0 1 255 102 Z" fill="#f093fb" opacity="0.8"/>
+  <path d="M 200 150 L 255 102 A 80 80 0 0 1 255 198 Z" fill="#f5576c" opacity="0.8"/>
+  <path d="M 200 150 L 255 198 A 80 80 0 0 1 145 198 Z" fill="#f093fb" opacity="0.5"/>
+  <path d="M 200 150 L 145 198 A 80 80 0 0 1 200 70 Z" fill="#f5576c" opacity="0.5"/>
+  
+  <!-- Center Circle -->
+  <circle cx="200" cy="150" r="40" fill="white"/>
+  
+  <!-- Legend -->
+  <rect x="100" y="250" width="15" height="15" rx="3" fill="#f093fb"/>
+  <text x="120" y="262" font-family="Arial" font-size="12" fill="#64748b">Stocks 45%</text>
+  
+  <rect x="200" y="250" width="15" height="15" rx="3" fill="#f5576c"/>
+  <text x="220" y="262" font-family="Arial" font-size="12" fill="#64748b">Cash 55%</text>
+</svg>

@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-up">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-file-text text-info me-2"></i>Generate Report
+            </h2>
+            <p class="text-muted mb-0">Export comprehensive system reports</p>
+        </div>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Report Options -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10 animate-fade-up delay-100">
+            <form method="post" action="{% url 'generate_report' %}">
+                {% csrf_token %}
+                
+                <div class="row g-4 mb-4">
+                    <!-- Report Type Selection -->
+                    <div class="col-md-6">
+                        <div class="glass-card p-4 h-100">
+                            <h5 class="fw-bold mb-4">
+                                <i class="bi bi-clipboard-data me-2 text-primary"></i>Select Report Type
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <div class="form-check glass-card p-3 mb-3">
+                                    <input class="form-check-input" type="radio" name="report_type" id="overview" value="overview" checked>
+                                    <label class="form-check-label w-100" for="overview">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-graph-up text-primary fs-4 me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">System Overview</div>
+                                                <small class="text-muted">Complete system statistics and top performers</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="form-check glass-card p-3 mb-3">
+                                    <input class="form-check-input" type="radio" name="report_type" id="users" value="users">
+                                    <label class="form-check-label w-100" for="users">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-people text-success fs-4 me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">User Report</div>
+                                                <small class="text-muted">Detailed user information and activity</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="form-check glass-card p-3">
+                                    <input class="form-check-input" type="radio" name="report_type" id="trades" value="trades">
+                                    <label class="form-check-label w-100" for="trades">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-bar-chart text-info fs-4 me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">Trading Activity Report</div>
+                                                <small class="text-muted">Complete trading history and metrics</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Format Selection -->
+                    <div class="col-md-6">
+                        <div class="glass-card p-4 h-100">
+                            <h5 class="fw-bold mb-4">
+                                <i class="bi bi-file-earmark me-2 text-warning"></i>Select Format
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <div class="form-check glass-card p-3 mb-3">
+                                    <input class="form-check-input" type="radio" name="format" id="pdf" value="pdf" checked>
+                                    <label class="form-check-label w-100" for="pdf">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-file-pdf text-danger fs-4 me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">PDF Document</div>
+                                                <small class="text-muted">Professional formatted report with charts</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="form-check glass-card p-3">
+                                    <input class="form-check-input" type="radio" name="format" id="csv" value="csv">
+                                    <label class="form-check-label w-100" for="csv">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-file-earmark-spreadsheet text-success fs-4 me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">CSV Spreadsheet</div>
+                                                <small class="text-muted">Raw data for further analysis</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Stats Preview -->
+                            <div class="mt-4 p-3 bg-light rounded">
+                                <h6 class="fw-bold mb-3">Current Statistics</h6>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <div class="fs-4 fw-bold text-primary">{{ total_users }}</div>
+                                            <small class="text-muted">Total Users</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <div class="fs-4 fw-bold text-success">{{ total_trades }}</div>
+                                            <small class="text-muted">Total Trades</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <div class="fs-4 fw-bold text-info">{{ active_users }}</div>
+                                            <small class="text-muted">Active Users</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <div class="fs-4 fw-bold text-warning">99.9%</div>
+                                            <small class="text-muted">System Health</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Preview -->
+                <div class="glass-card p-4 mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-eye me-2"></i>Report Preview
+                    </h5>
+                    <div class="p-3 bg-light rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-file-earmark-text text-primary fs-1 me-3"></i>
+                            <div>
+                                <div class="fw-bold" id="preview-title">System Overview Report</div>
+                                <small class="text-muted">
+                                    Format: <span id="preview-format">PDF</span> | 
+                                    Generated: <span id="preview-date">{{ "now"|date:"M d, Y" }}</span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mb-0 mt-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Note:</strong> Large reports may take a few moments to generate.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-modern btn-gradient-primary btn-lg">
+                        <i class="bi bi-download me-2"></i>Generate & Download Report
+                    </button>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary btn-lg">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const reportTypes = document.querySelectorAll('input[name="report_type"]');
+    const formats = document.querySelectorAll('input[name="format"]');
+    const previewTitle = document.getElementById('preview-title');
+    const previewFormat = document.getElementById('preview-format');
+    
+    // Update preview when report type changes
+    reportTypes.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const reportNames = {
+                'overview': 'System Overview Report',
+                'users': 'User Report',
+                'trades': 'Trading Activity Report'
+            };
+            previewTitle.textContent = reportNames[this.value] || 'Report';
+        });
+    });
+    
+    // Update preview when format changes
+    formats.forEach(radio => {
+        radio.addEventListener('change', function() {
+            previewFormat.textContent = this.value.toUpperCase();
+        });
+    });
+});
+</script>
+{% endblock %}

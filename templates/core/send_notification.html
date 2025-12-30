@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-up">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-bell text-warning me-2"></i>Send Notification
+            </h2>
+            <p class="text-muted mb-0">Send email notifications to users</p>
+        </div>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Notification Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 animate-fade-up delay-100">
+            <div class="glass-card p-4">
+                <form method="post" action="{% url 'send_notification' %}">
+                    {% csrf_token %}
+                    
+                    <!-- Recipient Selection -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-people me-2"></i>Send To
+                        </label>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="form-check glass-card p-3">
+                                    <input class="form-check-input" type="radio" name="notification_type" id="all" value="all" checked>
+                                    <label class="form-check-label w-100" for="all">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-medium">All Users</span>
+                                            <span class="badge badge-modern bg-primary bg-opacity-10 text-primary">{{ total_users }}</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check glass-card p-3">
+                                    <input class="form-check-input" type="radio" name="notification_type" id="active" value="active">
+                                    <label class="form-check-label w-100" for="active">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-medium">Active Users</span>
+                                            <span class="badge badge-modern bg-success bg-opacity-10 text-success">{{ active_users }}</span>
+                                        </div>
+                                        <small class="text-muted d-block mt-1">Last 7 days</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check glass-card p-3">
+                                    <input class="form-check-input" type="radio" name="notification_type" id="inactive" value="inactive">
+                                    <label class="form-check-label w-100" for="inactive">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-medium">Inactive Users</span>
+                                            <span class="badge badge-modern bg-warning bg-opacity-10 text-warning">{{ inactive_users }}</span>
+                                        </div>
+                                        <small class="text-muted d-block mt-1">30+ days</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="mb-4">
+                        <label for="subject" class="form-label fw-bold">
+                            <i class="bi bi-envelope me-2"></i>Subject
+                        </label>
+                        <input type="text" class="form-control" id="subject" name="subject" required 
+                               placeholder="Enter notification subject">
+                    </div>
+
+                    <!-- Message -->
+                    <div class="mb-4">
+                        <label for="message" class="form-label fw-bold">
+                            <i class="bi bi-chat-text me-2"></i>Message
+                        </label>
+                        <textarea class="form-control" id="message" name="message" rows="8" required
+                                  placeholder="Enter your message here..."></textarea>
+                        <small class="text-muted">This message will be sent via email to selected users.</small>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h6 class="fw-bold mb-2">
+                            <i class="bi bi-eye me-2"></i>Preview
+                        </h6>
+                        <div class="small">
+                            <strong>To:</strong> <span id="preview-to">All Users ({{ total_users }})</span><br>
+                            <strong>Subject:</strong> <span id="preview-subject" class="text-muted">Enter subject...</span><br>
+                            <strong>Message:</strong> <span id="preview-message" class="text-muted">Enter message...</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-modern btn-gradient-primary">
+                            <i class="bi bi-send me-2"></i>Send Notification
+                        </button>
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationTypes = document.querySelectorAll('input[name="notification_type"]');
+    const subjectInput = document.getElementById('subject');
+    const messageInput = document.getElementById('message');
+    const previewTo = document.getElementById('preview-to');
+    const previewSubject = document.getElementById('preview-subject');
+    const previewMessage = document.getElementById('preview-message');
+    
+    // Update preview when recipient type changes
+    notificationTypes.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const label = document.querySelector(`label[for="${this.id}"]`);
+            const badge = label.querySelector('.badge');
+            previewTo.textContent = label.textContent.trim() + ' (' + badge.textContent + ')';
+        });
+    });
+    
+    // Update preview when subject changes
+    subjectInput.addEventListener('input', function() {
+        previewSubject.textContent = this.value || 'Enter subject...';
+        previewSubject.classList.toggle('text-muted', !this.value);
+    });
+    
+    // Update preview when message changes
+    messageInput.addEventListener('input', function() {
+        previewMessage.textContent = this.value || 'Enter message...';
+        previewMessage.classList.toggle('text-muted', !this.value);
+    });
+});
+</script>
+{% endblock %}

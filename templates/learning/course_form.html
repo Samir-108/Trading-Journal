@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center animate-fade-up">
+        <div class="col-lg-8">
+            <div class="glass-card p-5">
+                <h2 class="fw-bold text-primary mb-4">
+                    {% if form.instance.pk %}Edit Course{% else %}Create New Course{% endif %}
+                </h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-2"></i>Save Course
+                        </button>
+                        <a href="{% url 'course_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

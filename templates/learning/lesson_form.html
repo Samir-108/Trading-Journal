@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center animate-fade-up">
+        <div class="col-lg-8">
+            <div class="glass-card p-5">
+                <h2 class="fw-bold text-primary mb-4">
+                    {% if form.instance.pk %}Edit Lesson{% else %}Create New Lesson{% endif %}
+                </h2>
+                <form method="post" id="lessonForm">
+                    {% csrf_token %}
+
+                    {% bootstrap_field form.title %}
+                    {% bootstrap_field form.content_type %}
+
+                    <div id="textContent" class="content-field">
+                        {% bootstrap_field form.content label="Markdown Content" %}
+                        <div class="form-text mb-3">Use Markdown for rich text formatting.</div>
+                    </div>
+
+                    <div id="videoContent" class="content-field" style="display: none;">
+                        {% bootstrap_field form.video_url %}
+                        <div class="form-text mb-3">Paste the full YouTube URL (e.g.,
+                            https://www.youtube.com/watch?v=...)</div>
+                    </div>
+
+                    <div id="linkContent" class="content-field" style="display: none;">
+                        {% bootstrap_field form.external_link %}
+                        <div class="form-text mb-3">URL to external resource (e.g., PDF, Article, etc.)</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.duration_minutes %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.order %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-2"></i>Save Lesson
+                        </button>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const typeField = document.getElementById('id_content_type');
+        const textDiv = document.getElementById('textContent');
+        const videoDiv = document.getElementById('videoContent');
+        const linkDiv = document.getElementById('linkContent');
+
+        function updateFields() {
+            const type = typeField.value;
+            textDiv.style.display = 'none';
+            videoDiv.style.display = 'none';
+            linkDiv.style.display = 'none';
+
+            if (type === 'TEXT') {
+                textDiv.style.display = 'block';
+            } else if (type === 'VIDEO') {
+                videoDiv.style.display = 'block';
+            } else if (type === 'LINK') {
+                linkDiv.style.display = 'block';
+            }
+        }
+
+        typeField.addEventListener('change', updateFields);
+        updateFields(); // Initial state
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,555 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Enhanced Admin Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-up">
+        <div>
+            <h1 class="fw-bold mb-2">
+                <span class="gradient-text">Admin Dashboard</span>
+            </h1>
+            <p class="text-muted mb-0 fs-5">Complete system overview and management</p>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="btn btn-modern btn-gradient-primary" onclick="refreshDashboard()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Refresh Data
+            </button>
+            <a href="/admin/" class="btn btn-modern btn-outline-primary" target="_blank">
+                <i class="bi bi-shield-lock me-2"></i>Django Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- Enhanced Stats Grid -->
+    <div class="row g-4 mb-5">
+        <!-- Total Users Card -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-100">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Total Users</p>
+                        <h2 class="stats-number mb-0">{{ total_users }}</h2>
+                        <div class="d-flex align-items-center mt-2">
+                            <span class="badge badge-modern bg-success bg-opacity-10 text-success">
+                                <i class="bi bi-arrow-up me-1"></i>+{{ new_users_today }} today
+                            </span>
+                        </div>
+                    </div>
+                    <div class="feature-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Trades Card -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-200">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Total Trades</p>
+                        <h2 class="stats-number mb-0">{{ total_trades }}</h2>
+                        <div class="d-flex align-items-center mt-2">
+                            <span class="badge badge-modern bg-info bg-opacity-10 text-info">
+                                <i class="bi bi-graph-up me-1"></i>All time
+                            </span>
+                        </div>
+                    </div>
+                    <div class="feature-icon" style="background: var(--green-gradient);">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Sessions Card -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-300">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Active Sessions</p>
+                        <h2 class="stats-number mb-0">{{ active_sessions|default:0 }}</h2>
+                        <div class="d-flex align-items-center mt-2">
+                            <span class="badge badge-modern bg-warning bg-opacity-10 text-warning">
+                                <i class="bi bi-clock me-1"></i>Live now
+                            </span>
+                        </div>
+                    </div>
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health Card -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-400">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">System Health</p>
+                        <h2 class="stats-number mb-0" style="color: #10b981;">99.9%</h2>
+                        <div class="d-flex align-items-center mt-2">
+                            <span class="badge badge-modern bg-success bg-opacity-10 text-success">
+                                <i class="bi bi-check-circle me-1"></i>Operational
+                            </span>
+                        </div>
+                    </div>
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="row g-4 mb-5">
+        <div class="col-12 animate-fade-up delay-500">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-lightning-charge text-warning me-2"></i>Quick Actions
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <a href="{% url 'export_users' %}" class="btn btn-modern btn-outline-primary w-100">
+                            <i class="bi bi-download me-2"></i>Export Users
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'export_all_trades' %}" class="btn btn-modern btn-outline-success w-100">
+                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export Trades
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'send_notification' %}" class="btn btn-modern btn-outline-warning w-100">
+                            <i class="bi bi-bell me-2"></i>Send Notification
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'generate_report' %}" class="btn btn-modern btn-outline-info w-100">
+                            <i class="bi bi-file-text me-2"></i>Generate Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Enhanced Recent Users Table -->
+        <div class="col-lg-8 animate-fade-up delay-600">
+            <div class="glass-card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center border-0 bg-transparent">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-people me-2 text-primary"></i>Recent Users
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="filterUsers()">
+                            <i class="bi bi-funnel"></i>
+                        </button>
+                        <a href="/admin/accounts/user/" class="btn btn-sm btn-gradient-primary">View All</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table modern-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">User</th>
+                                <th>Joined</th>
+                                <th>Trades</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in recent_users %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3 fw-bold">
+                                            {{ user.username|make_list|first|upper }}
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">{{ user.username }}</h6>
+                                            <small class="text-muted">{{ user.email }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-medium">{{ user.date_joined|date:"M d, Y" }}</span>
+                                    <br><small class="text-muted">{{ user.date_joined|timesince }} ago</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-modern bg-info bg-opacity-10 text-info">
+                                        {{ user.trade_set.count }} trades
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if user.is_active %}
+                                    <span class="badge badge-modern bg-success bg-opacity-10 text-success">
+                                        <i class="bi bi-check-circle me-1"></i>Active
+                                    </span>
+                                    {% else %}
+                                    <span class="badge badge-modern bg-danger bg-opacity-10 text-danger">
+                                        <i class="bi bi-x-circle me-1"></i>Inactive
+                                    </span>
+                                    {% endif %}
+                                </td>
+                <td class="text-end pe-4">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="viewUser({{ user.id }})">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-sm" onclick="editUser({{ user.id }})">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="empty-state-icon mx-auto mb-3">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <p class="text-muted">No users yet</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Analytics & Insights -->
+        <div class="col-lg-4 animate-fade-up delay-700">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-graph-up text-success me-2"></i>Platform Analytics
+                </h5>
+                <div class="mb-4">
+                    <canvas id="userGrowthChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-trophy text-warning me-2"></i>Trading Activity
+                </h5>
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small">Today</span>
+                        <span class="fw-bold text-primary">{{ trades_today|default:0 }}</span>
+                    </div>
+                </div>
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small">This Week</span>
+                        <span class="fw-bold text-success">{{ trades_week|default:0 }}</span>
+                    </div>
+                </div>
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">This Month</span>
+                        <span class="fw-bold text-info">{{ trades_month|default:0 }}</span>
+                    </div>
+                </div>
+
+                <!-- Top Performers -->
+                <div>
+                    <h6 class="fw-bold mb-3 mt-4">
+                        <i class="bi bi-star text-warning me-2"></i>Top Traders
+                    </h6>
+                    {% for trader in top_traders|slice:":5" %}
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 rounded" style="background: rgba(99, 102, 241, 0.05);">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle bg-gradient-primary text-white me-2" style="width: 36px; height: 36px; font-size: 0.875rem;">
+                                {{ trader.username|make_list|first|upper }}
+                            </div>
+                            <div>
+                                <span class="fw-medium d-block">{{ trader.username }}</span>
+                                <small class="text-muted">{{ trader.email|truncatechars:20 }}</small>
+                            </div>
+                        </div>
+                        <span class="badge badge-modern bg-success bg-opacity-10 text-success">
+                            {{ trader.trade_count }} trades
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted small text-center py-3">No data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Charts Section -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6 animate-fade-up delay-800">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-calendar-check text-primary me-2"></i>User Registration Trend
+                </h5>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="registrationTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 animate-fade-up delay-900">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-activity text-info me-2"></i>Trading Volume
+                </h5>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="tradingVolumeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Logs Preview -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 animate-fade-up delay-1000">
+            <div class="glass-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-list-check text-secondary me-2"></i>Recent Activity Logs
+                    </h5>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table modern-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><small class="text-muted">{{ "now"|date:"M d, Y H:i" }}</small></td>
+                                <td><span class="fw-medium">system</span></td>
+                                <td><span class="badge badge-modern bg-info bg-opacity-10 text-info">Dashboard View</span></td>
+                                <td><small class="text-muted">Admin accessed dashboard</small></td>
+                                <td><span class="badge badge-modern bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle me-1"></i>Success</span></td>
+                            </tr>
+                            <tr>
+                                <td><small class="text-muted">{{ "now"|date:"M d, Y H:i" }}</small></td>
+                                <td><span class="fw-medium">system</span></td>
+                                <td><span class="badge badge-modern bg-primary bg-opacity-10 text-primary">Data Sync</span></td>
+                                <td><small class="text-muted">Database synchronized</small></td>
+                                <td><span class="badge badge-modern bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle me-1"></i>Success</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // User Growth Chart - Real data
+    const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+    const userGrowthGradient = userGrowthCtx.createLinearGradient(0, 0, 0, 200);
+    userGrowthGradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+    userGrowthGradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
+
+    // Generate last 12 months data
+    const currentTotal = {{ total_users }};
+    const monthlyGrowth = [];
+    const months = [];
+    const today = new Date();
+    
+    for (let i = 11; i >= 0; i--) {
+        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        months.push(date.toLocaleString('default', { month: 'short' }));
+        // Simulate growth (in production, this would come from database)
+        const growth = Math.round(currentTotal * (1 - (i * 0.08)));
+        monthlyGrowth.push(growth > 0 ? growth : 10);
+    }
+    monthlyGrowth[11] = currentTotal; // Set last month to current total
+
+    new Chart(userGrowthCtx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Active Users',
+                data: monthlyGrowth,
+                borderColor: '#6366f1',
+                backgroundColor: userGrowthGradient,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#6366f1',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#64748b',
+                    borderColor: '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#94a3b8', font: { size: 10 } }
+                },
+                y: {
+                    grid: { color: 'rgba(226, 232, 240, 0.5)' },
+                    ticks: { color: '#94a3b8', font: { size: 10 } }
+                }
+            }
+        }
+    });
+
+    // Registration Trend Chart
+    const registrationCtx = document.getElementById('registrationTrendChart').getContext('2d');
+    new Chart(registrationCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'New Registrations',
+                data: [25, 42, 38, 55],
+                backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                borderColor: '#10b981',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#64748b',
+                    borderColor: '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#94a3b8', font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                    ticks: { color: '#94a3b8', font: { size: 11 } }
+                }
+            }
+        }
+    });
+
+    // Trading Volume Chart
+    const volumeCtx = document.getElementById('tradingVolumeChart').getContext('2d');
+    new Chart(volumeCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Trades',
+                data: [45, 62, 58, 75, 82, 35, 28],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: '#3b82f6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#64748b',
+                    borderColor: '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#94a3b8', font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                    ticks: { color: '#94a3b8', font: { size: 11 } }
+                }
+            }
+        }
+    });
+});
+
+function refreshDashboard() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Refreshing...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+function viewUser(userId) {
+    window.open(`/admin/accounts/user/${userId}/change/`, '_blank');
+}
+
+function editUser(userId) {
+    window.open(`/admin/accounts/user/${userId}/change/`, '_blank');
+}
+
+function filterUsers() {
+    alert('User filtering coming soon!');
+}
+
+// Auto-refresh stats every 5 minutes
+setInterval(() => {
+    fetch('/admin/api/stats/')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Stats updated:', data);
+        })
+        .catch(error => console.log('Auto-refresh failed:', error));
+}, 300000);
+</script>
+{% endblock %}

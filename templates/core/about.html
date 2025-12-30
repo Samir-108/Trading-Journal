@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="padding: 6rem 0 4rem;">
+    <div class="container">
+        <div class="row align-items-center py-5">
+            <div class="col-lg-6 animate-fade-up">
+                <span class="badge badge-modern bg-primary bg-opacity-10 text-primary mb-3">
+                    <i class="bi bi-info-circle me-2"></i>About Us
+                </span>
+                <h1 class="display-3 fw-bold mb-3">
+                    Empowering <span class="gradient-text">Nepali Traders</span>
+                </h1>
+                <p class="lead mb-4 text-muted">
+                    We're on a mission to transform how Nepali traders approach the stock market. 
+                    Our platform combines cutting-edge technology with deep market insights to help you trade smarter, not harder.
+                </p>
+            </div>
+            <div class="col-lg-6 animate-fade-up delay-200">
+                <div class="position-relative mt-5 mt-lg-0">
+                    <div class="glass-card p-4 shadow-lg">
+                        <img src="{% static 'img/hero/dashboard-preview.svg' %}" alt="About Us" class="img-fluid rounded-3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 animate-fade-up">
+                <h2 class="display-5 fw-bold mb-4">Our Mission</h2>
+                <p class="lead mb-4">
+                    To democratize trading education and provide Nepali investors with professional-grade tools 
+                    that were previously only available to institutional traders.
+                </p>
+                <p class="text-muted mb-4">
+                    We believe that every trader deserves access to comprehensive analytics, emotional tracking, 
+                    and educational resources that can help them make informed decisions in the NEPSE market.
+                </p>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                <i class="bi bi-check-circle-fill text-primary"></i>
+                            </div>
+                            <span class="fw-semibold">Data-Driven</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                            <span class="fw-semibold">User-Focused</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 animate-fade-up delay-200">
+                <div class="position-relative">
+                    <div class="glass-card p-4 shadow-lg">
+                        <img src="{% static 'img/hero/dashboard-preview.svg' %}" alt="About Us" class="img-fluid rounded-3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="py-5">
+    <div class="container py-5">
+        <div class="text-center section-header mb-5">
+            <span class="badge badge-modern bg-primary bg-opacity-10 text-primary mb-3">
+                <i class="bi bi-heart me-2"></i>Our Values
+            </span>
+            <h2 class="display-5 fw-bold mb-3">What Drives Us</h2>
+            <p class="lead text-muted">The principles that guide everything we do</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6 animate-fade-up">
+                <div class="text-center p-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-lightbulb-fill text-primary display-6"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Innovation</h4>
+                    <p class="text-muted">We continuously innovate to bring you the latest trading tools and technologies.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-100">
+                <div class="text-center p-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-shield-check text-success display-6"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Trust</h4>
+                    <p class="text-muted">Your data security and privacy are our top priorities. We never compromise on trust.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-200">
+                <div class="text-center p-4">
+                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-people-fill text-info display-6"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Community</h4>
+                    <p class="text-muted">We're building a community of successful traders who support each other's growth.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center section-header mb-5">
+            <span class="badge badge-modern bg-primary bg-opacity-10 text-primary mb-3">
+                <i class="bi bi-people me-2"></i>Our Team
+            </span>
+            <h2 class="display-5 fw-bold mb-3">Meet the Experts</h2>
+            <p class="lead text-muted">Passionate professionals dedicated to your trading success</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6 animate-fade-up">
+                <div class="glass-card text-center p-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 100px; height: 100px;">
+                        <i class="bi bi-person-fill text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Development Team</h5>
+                    <p class="text-muted small mb-3">Full-Stack Developers</p>
+                    <p class="text-muted">Building robust, scalable solutions for the Nepali trading community.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-100">
+                <div class="glass-card text-center p-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 100px; height: 100px;">
+                        <i class="bi bi-graph-up text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Trading Experts</h5>
+                    <p class="text-muted small mb-3">Market Analysts</p>
+                    <p class="text-muted">Experienced traders providing insights and educational content.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 animate-fade-up delay-200">
+                <div class="glass-card text-center p-4">
+                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 100px; height: 100px;">
+                        <i class="bi bi-headset text-info" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Support Team</h5>
+                    <p class="text-muted small mb-3">Customer Success</p>
+                    <p class="text-muted">Dedicated to helping you succeed with 24/7 support and guidance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center animate-fade-up">
+                <div class="glass-card p-5 shadow-lg">
+                    <h2 class="display-5 fw-bold mb-4">Ready to Join Our Community?</h2>
+                    <p class="lead mb-4 text-muted">
+                        Start your journey towards better trading with tools designed specifically for Nepali traders.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 justify-content-center mb-4">
+                        <a href="{% url 'register' %}" class="btn btn-modern btn-gradient-primary btn-lg">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
+                        </a>
+                        <a href="{% url 'support' %}" class="btn btn-modern btn-outline-primary btn-lg">
+                            <i class="bi bi-chat-dots me-2"></i>Contact Us
+                        </a>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        <i class="bi bi-shield-check me-2"></i>No credit card required • Free forever
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

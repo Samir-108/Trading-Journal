@@ -1,0 +1,556 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Enhanced Dashboard Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-up">
+        <div>
+            <h1 class="fw-bold mb-2">
+                <span class="gradient-text">Trading Dashboard</span>
+            </h1>
+            <p class="text-muted mb-0 fs-5">Welcome back, {{ user.username }}! Track your trading journey.</p>
+        </div>
+        <div class="d-flex gap-3">
+            <a href="{% url 'trade_create' %}" class="btn btn-modern btn-gradient-primary">
+                <i class="bi bi-plus-lg me-2"></i>New Trade
+            </a>
+            <button class="btn btn-modern btn-outline-primary" onclick="window.print()">
+                <i class="bi bi-printer me-2"></i>Print
+            </button>
+        </div>
+    </div>
+
+    <!-- Key Metrics Grid - Enhanced with Admin Dashboard Style -->
+    <div class="row g-4 mb-5 animate-fade-up">
+        <!-- Account Balance -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-100">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Account Balance</p>
+                        <h2 class="stats-number mb-0">₹{{ current_balance|floatformat:0 }}</h2>
+                        <div class="d-flex align-items-center mt-2">
+                            <span class="badge badge-modern bg-success bg-opacity-10 text-success">
+                                <i class="bi bi-graph-up-arrow me-1"></i>Live
+                            </span>
+                        </div>
+                    </div>
+                    <div class="feature-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profit Factor -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-200">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Profit Factor</p>
+                        <h2 class="stats-number mb-0">{{ profit_factor }}</h2>
+                        <div class="progress mt-3" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {% if profit_factor > 2 %}100{% elif profit_factor > 1 %}{{ profit_factor|floatformat:0|add:'0' }}{% else %}50{% endif %}%"></div>
+                        </div>
+                    </div>
+                    <div class="feature-icon" style="background: var(--green-gradient);">
+                        <i class="bi bi-calculator"></i>
+                    </div>
+                </div>
+                <small class="text-muted">Target: > 1.5</small>
+            </div>
+        </div>
+
+        <!-- Win Rate -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-300">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Win Rate</p>
+                        <h2 class="stats-number mb-0">{{ win_rate }}%</h2>
+                        <div class="d-flex align-items-center gap-2 mt-3">
+                            <div class="progress flex-grow-1" style="height: 6px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ win_rate }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-icon" style="background: var(--blue-gradient);">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between small text-muted mt-2">
+                    <span>{{ winning_trades }} Wins</span>
+                    <span>{{ losing_trades }} Losses</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expectancy -->
+        <div class="col-xl-3 col-md-6 animate-fade-up delay-400">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-2 tracking-wide">Expectancy</p>
+                        <h2 class="stats-number mb-0 {% if expectancy > 0 %}text-success{% else %}text-danger{% endif %}">
+                            {% if expectancy > 0 %}+{% endif %}₹{{ expectancy|floatformat:0 }}
+                        </h2>
+                        <div class="d-flex align-items-center mt-2">
+                            <span class="badge badge-modern {% if expectancy > 0 %}bg-success{% else %}bg-danger{% endif %} bg-opacity-10 {% if expectancy > 0 %}text-success{% else %}text-danger{% endif %}">
+                                <i class="bi bi-{% if expectancy > 0 %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>Per Trade
+                            </span>
+                        </div>
+                    </div>
+                    <div class="feature-icon" style="background: var(--orange-gradient);">
+                        <i class="bi bi-bullseye"></i>
+                    </div>
+                </div>
+                <small class="text-muted">Avg return per trade</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts & Detailed Stats -->
+    <div class="row g-4 mb-4 animate-fade-up delay-100">
+        <!-- Equity Curve -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-graph-up text-primary me-2"></i>Equity Curve
+                    </h5>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary active">All</button>
+                        <button type="button" class="btn btn-outline-secondary">1M</button>
+                        <button type="button" class="btn btn-outline-secondary">3M</button>
+                        <button type="button" class="btn btn-outline-secondary">1Y</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="equityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Stats -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-award text-warning me-2"></i>Performance Stats
+                </h5>
+
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small">Gross Profit</span>
+                        <span class="fw-bold text-success fs-5">+₹{{ gross_profit|floatformat:0 }}</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small">Gross Loss</span>
+                        <span class="fw-bold text-danger fs-5">-₹{{ gross_loss|floatformat:0 }}</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-danger" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Average Win</span>
+                        <span class="fw-bold text-success">₹{{ avg_win|floatformat:0 }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-4 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Average Loss</span>
+                        <span class="fw-bold text-danger">₹{{ avg_loss|floatformat:0 }}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Total Trades</span>
+                        <span class="fw-bold text-primary">{{ total_trades }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Charts -->
+    <div class="row g-4 mb-4 animate-fade-up delay-200">
+        <!-- Trade Distribution -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-pie-chart text-info me-2"></i>Trade Distribution
+                </h5>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="tradeDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Performance -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-calendar3 text-success me-2"></i>Monthly Performance
+                </h5>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="monthlyPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Trades & Quick Actions -->
+    <div class="row g-4 mb-4 animate-fade-up delay-300">
+        <!-- Recent Trades -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-clock-history text-primary me-2"></i>Recent Trades
+                    </h5>
+                    <a href="{% url 'trade_list' %}" class="btn btn-sm btn-outline-primary">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table modern-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Entry Date</th>
+                                <th>Quantity</th>
+                                <th>P&L</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trade in recent_trades %}
+                            <tr>
+                                <td>
+                                    <span class="fw-bold">{{ trade.symbol }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-modern {% if trade.trade_type == 'BUY' %}bg-success{% else %}bg-danger{% endif %} bg-opacity-10 {% if trade.trade_type == 'BUY' %}text-success{% else %}text-danger{% endif %}">
+                                        <i class="bi bi-arrow-{% if trade.trade_type == 'BUY' %}up{% else %}down{% endif %} me-1"></i>{{ trade.trade_type }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ trade.entry_date|date:"M d, Y" }}</small>
+                                </td>
+                                <td>{{ trade.quantity }}</td>
+                                <td>
+                                    {% if trade.pnl %}
+                                    <span class="fw-bold {% if trade.pnl > 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {% if trade.pnl > 0 %}+{% endif %}₹{{ trade.pnl|floatformat:0 }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-modern {% if trade.status == 'OPEN' %}bg-warning{% else %}bg-info{% endif %} bg-opacity-10 {% if trade.status == 'OPEN' %}text-warning{% else %}text-info{% endif %}">
+                                        {{ trade.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="empty-state-icon mx-auto mb-3">
+                                        <i class="bi bi-inbox"></i>
+                                    </div>
+                                    <p class="text-muted mb-3">No trades yet. Start by logging your first trade!</p>
+                                    <a href="{% url 'trade_create' %}" class="btn btn-modern btn-gradient-primary">
+                                        <i class="bi bi-plus-lg me-2"></i>Add Trade
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Insights -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-lightning-charge text-warning me-2"></i>Quick Actions
+                </h5>
+                <div class="d-grid gap-3">
+                    <a href="{% url 'trade_create' %}" class="btn btn-modern btn-gradient-primary">
+                        <i class="bi bi-plus-lg me-2"></i>New Trade
+                    </a>
+                    <a href="{% url 'trade_list' %}" class="btn btn-modern btn-outline-primary">
+                        <i class="bi bi-journal-text me-2"></i>View Journal
+                    </a>
+                    <a href="{% url 'portfolio_dashboard' %}" class="btn btn-modern btn-outline-success">
+                        <i class="bi bi-wallet2 me-2"></i>Portfolio
+                    </a>
+                    <a href="{% url 'course_list' %}" class="btn btn-modern btn-outline-info">
+                        <i class="bi bi-mortarboard me-2"></i>Learning
+                    </a>
+                </div>
+            </div>
+
+            <!-- Trading Tip -->
+            <div class="glass-card p-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(16, 185, 129, 0.1));">
+                <h6 class="fw-bold mb-3">
+                    <i class="bi bi-lightbulb text-warning me-2"></i>Trading Tip
+                </h6>
+                <p class="small mb-0 text-muted">
+                    Keep a detailed journal of your emotions before and after each trade. 
+                    Understanding your psychology is key to consistent profitability.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Equity Chart
+        const equityCtx = document.getElementById('equityChart').getContext('2d');
+        const gradient = equityCtx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
+
+        new Chart(equityCtx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Cumulative P&L',
+                    data: {{ chart_data|safe }},
+                    borderColor: '#6366f1',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#4f46e5',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#64748b',
+                        borderColor: '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 16,
+                        displayColors: false,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function (context) {
+                                return 'P&L: ₹' + context.parsed.y.toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 8,
+                            color: '#94a3b8',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(226, 232, 240, 0.6)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: {
+                                size: 11
+                            },
+                            callback: function (value) {
+                                return '₹' + value.toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                }
+            }
+        });
+
+        // Trade Distribution Pie Chart
+        const distributionCtx = document.getElementById('tradeDistributionChart').getContext('2d');
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Winning Trades', 'Losing Trades', 'Breakeven'],
+                datasets: [{
+                    data: [{{ winning_trades }}, {{ losing_trades }}, {{ breakeven_trades }}],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(100, 116, 139, 0.8)'
+                    ],
+                    borderColor: ['#fff', '#fff', '#fff'],
+                    borderWidth: 3,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#64748b',
+                        borderColor: '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // Monthly Performance Bar Chart
+        const monthlyCtx = document.getElementById('monthlyPerformanceChart').getContext('2d');
+        const monthlyData = {
+            labels: {{ monthly_labels|safe }},
+            datasets: [{
+                label: 'Monthly P&L',
+                data: {{ monthly_data|safe }},
+                backgroundColor: function(context) {
+                    const value = context.parsed.y;
+                    return value >= 0 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+                },
+                borderColor: function(context) {
+                    const value = context.parsed.y;
+                    return value >= 0 ? '#10b981' : '#ef4444';
+                },
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        };
+
+        new Chart(monthlyCtx, {
+            type: 'bar',
+            data: monthlyData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#64748b',
+                        borderColor: '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return 'P&L: ₹' + context.parsed.y.toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(226, 232, 240, 0.6)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: {
+                                size: 11
+                            },
+                            callback: function(value) {
+                                return '₹' + (value/1000) + 'K';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

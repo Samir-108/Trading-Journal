@@ -1,0 +1,28 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11998e"/>
+      <stop offset="100%" stop-color="#38ef7d"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="200" cy="150" r="120" fill="url(#grad2)" opacity="0.1"/>
+  
+  <!-- Journal Book -->
+  <rect x="120" y="80" width="160" height="140" rx="8" fill="white" stroke="#11998e" stroke-width="3"/>
+  
+  <!-- Binding -->
+  <rect x="120" y="80" width="20" height="140" rx="8" fill="#11998e"/>
+  
+  <!-- Lines on page -->
+  <line x1="160" y1="110" x2="260" y2="110" stroke="#64748b" stroke-width="2" opacity="0.3"/>
+  <line x1="160" y1="130" x2="260" y2="130" stroke="#64748b" stroke-width="2" opacity="0.3"/>
+  <line x1="160" y1="150" x2="240" y2="150" stroke="#64748b" stroke-width="2" opacity="0.3"/>
+  <line x1="160" y1="170" x2="260" y2="170" stroke="#64748b" stroke-width="2" opacity="0.3"/>
+  <line x1="160" y1="190" x2="230" y2="190" stroke="#64748b" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Pen -->
+  <rect x="240" y="160" width="80" height="8" rx="4" fill="#38ef7d" transform="rotate(45 280 164)"/>
+  <circle cx="295" cy="179" r="8" fill="#11998e"/>
+</svg>
