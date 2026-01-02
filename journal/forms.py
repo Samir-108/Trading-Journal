@@ -13,7 +13,7 @@ class TradeForm(forms.ModelForm):
         widgets = {
             'entry_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'exit_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'notes': forms.Textarea(attrs={'rows': 3}),
+            'notes': forms.Textarea(attrs={'rows': 2}),
         }
     
     def __init__(self, user, *args, **kwargs):
