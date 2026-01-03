@@ -54,6 +54,12 @@ class Trade(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    trade_reason = models.TextField(
+    blank=True, 
+    help_text="Why did you take this trade position?"
+)
+
+
     def __str__(self):
         return f"{self.symbol} - {self.trade_type} ({self.entry_date.date()})"
 
@@ -74,3 +80,6 @@ class TradeImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.trade}"
+    
+
+    

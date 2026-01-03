@@ -9,7 +9,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Nepse Trade Journal{% endblock %}</title>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3310/3310624.png" type="image/png">
+    <link rel="icon" href="./registration/trending.png" type="image/png">
 
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -28,7 +28,7 @@
     {% if user.is_authenticated %}
     <nav class="navbar navbar-expand-lg fixed-top glass-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold text-primary" href="{% url 'dashboard' %}">
+            <a class="navbar-brand fw-bold text-success" href="{% url 'dashboard' %}">
                 <i class="bi bi-graph-up-arrow"></i> Nepse Journal
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -101,16 +101,15 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="publicNav">
-                <ul class="navbar-nav ms-auto align-items-center gap-3">
-                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary text-white" href="{% url 'register' %}">Get Started</a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="navbar-nav ms-auto align-items-center gap-3">
+    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'pricing' %}">Pricing</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+    <li class="nav-item">
+        <a class="btn btn-primary text-white" href="{% url 'register' %}">Get Started</a>
+    </li>
+</ul>
         </div>
     </nav>
     {% endif %}

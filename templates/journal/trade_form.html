@@ -2,25 +2,218 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="glass-card shadow mb-4">
-                <div class="card-header bg-transparent border-bottom border-light py-3">
-                    <h4 class="m-0 font-weight-bold text-primary">{{ title }}</h4>
-                </div>
-                <div class="card-body p-4">
-                    <form method="post">
-                        {% csrf_token %}
-                        {% bootstrap_form form %}
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="mb-4 animate-fade-in">
+                <h2 class="fw-bold text-primary mb-2">
+                    <i class="bi bi-graph-up-arrow me-2"></i>{{ title }}
+                </h2>
+                <p class="text-muted">Fill in your trade details with risk management</p>
+            </div>
 
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <a href="{% url 'strategy_create' %}" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-plus-circle me-1"></i>Add New Strategy
+            <div class="glass-card shadow-lg animate-fade-in delay-100">
+                <div class="card-body p-4 p-lg-5">
+                    <form method="post" id="tradeForm">
+                        {% csrf_token %}
+                        
+                        <!-- Trade Information -->
+                        <div class="form-section mb-5">
+                            <div class="section-title mb-4">
+                                <h5 class="fw-bold d-flex align-items-center">
+                                    <span class="section-icon bg-primary">
+                                        <i class="bi bi-info-circle text-white"></i>
+                                    </span>
+                                    Trade Information
+                                </h5>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Symbol</label>
+                                    {% bootstrap_field form.symbol show_label=False %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Trade Type</label>
+                                    {% bootstrap_field form.trade_type show_label=False %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Entry Date & Time</label>
+                                    {% bootstrap_field form.entry_date show_label=False %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Status</label>
+                                    {% bootstrap_field form.status show_label=False %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price & Quantity -->
+                        <div class="form-section mb-5">
+                            <div class="section-title mb-4">
+                                <h5 class="fw-bold d-flex align-items-center">
+                                    <span class="section-icon bg-success">
+                                        <i class="bi bi-currency-rupee text-white"></i>
+                                    </span>
+                                    Price & Quantity
+                                </h5>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Entry Price</label>
+                                    {% bootstrap_field form.entry_price show_label=False %}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Stop Loss</label>
+                                    {% bootstrap_field form.stop_loss show_label=False %}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Target</label>
+                                    {% bootstrap_field form.target show_label=False %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Quantity</label>
+                                    {% bootstrap_field form.quantity show_label=False %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk/Reward Calculator -->
+                        <div class="form-section mb-5">
+                            <div class="section-title mb-4">
+                                <h5 class="fw-bold d-flex align-items-center">
+                                    <span class="section-icon bg-warning">
+                                        <i class="bi bi-shield-check text-white"></i>
+                                    </span>
+                                    Risk & Reward Analysis
+                                </h5>
+                            </div>
+                            
+                            <div id="rrCalculator" class="rr-calculator" style="display: none;">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="stat-card stat-card-primary">
+                                            <div class="stat-icon">
+                                                <i class="bi bi-award"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-label">Risk/Reward Ratio</span>
+                                                <span class="stat-value" id="rrRatio">--</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-card stat-card-danger">
+                                            <div class="stat-icon">
+                                                <i class="bi bi-arrow-down-circle"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-label">Total Risk</span>
+                                                <span class="stat-value text-danger" id="totalRisk">₹0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-card stat-card-success">
+                                            <div class="stat-icon">
+                                                <i class="bi bi-arrow-up-circle"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-label">Total Reward</span>
+                                                <span class="stat-value text-success" id="totalReward">₹0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="rrPlaceholder" class="text-center py-4 text-muted">
+                                <i class="bi bi-calculator fs-1 mb-2 d-block"></i>
+                                <p class="mb-0">Enter Entry Price, Stop Loss, Target & Quantity to calculate Risk/Reward</p>
+                            </div>
+                        </div>
+
+                        <!-- Exit Details (Optional) -->
+                        <div class="form-section mb-5">
+                            <div class="section-title mb-4">
+                                <h5 class="fw-bold d-flex align-items-center">
+                                    <span class="section-icon bg-info">
+                                        <i class="bi bi-box-arrow-right text-white"></i>
+                                    </span>
+                                    Exit Details <span class="badge bg-secondary ms-2">Optional</span>
+                                </h5>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Exit Price</label>
+                                    {% bootstrap_field form.exit_price show_label=False %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Exit Date & Time</label>
+                                    {% bootstrap_field form.exit_date show_label=False %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Strategy & Notes -->
+                        <div class="form-section mb-5">
+                            <div class="section-title mb-4">
+                                <h5 class="fw-bold d-flex align-items-center">
+                                    <span class="section-icon bg-purple">
+                                        <i class="bi bi-lightbulb text-white"></i>
+                                    </span>
+                                    Strategy & Analysis
+                                </h5>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Strategy Template</label>
+                                    {% bootstrap_field form.strategy show_label=False %}
+                                    <a href="{% url 'strategy_create' %}" class="btn btn-sm btn-outline-primary mt-2">
+                                        <i class="bi bi-plus-circle me-1"></i>Create New Strategy
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Emotional State</label>
+                                    {% bootstrap_field form.emotion show_label=False %}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-bullseye me-1"></i>Trade Reason / Setup
+                                    </label>
+                                    <small class="text-muted d-block mb-2">Explain why you took this trade position and your entry logic</small>
+                                    <textarea 
+                                        name="trade_reason" 
+                                        class="form-control" 
+                                        rows="3" 
+                                        placeholder="Example: Bullish engulfing pattern on daily chart with RSI bouncing from oversold. Support at 180 holding strong..."
+                                    ></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-journal-text me-1"></i>Additional Notes
+                                    </label>
+                                    {% bootstrap_field form.notes show_label=False %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center pt-4 border-top">
+                            <a href="{% url 'trade_list' %}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
                             </a>
                             <div class="d-flex gap-2">
-                                <a href="{% url 'trade_list' %}" class="btn btn-secondary">Cancel</a>
-                                <button type="submit" class="btn btn-primary px-4">Save Trade</button>
+                                <button type="reset" class="btn btn-outline-primary px-4" id="resetBtn">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>Reset
+                                </button>
+                                <button type="submit" class="btn btn-gradient-primary px-5">
+                                    <i class="bi bi-check-circle me-2"></i>Save Trade
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -29,4 +222,301 @@
         </div>
     </div>
 </div>
+
+<style>
+:root {
+    --primary: #6366f1;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --purple: #8b5cf6;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.form-section {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, transparent 100%);
+    border-radius: 1rem;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.section-title h5 {
+    color: #1e293b;
+    margin-bottom: 0;
+}
+
+.section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+}
+
+.bg-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.form-label {
+    color: #475569;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1.5px solid #e2e8f0;
+    padding: 0.625rem 0.875rem;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+textarea.form-control {
+    min-height: 100px;
+}
+
+/* Risk/Reward Calculator */
+.rr-calculator {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card {
+    padding: 1.25rem;
+    border-radius: 0.875rem;
+    background: white;
+    border: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card-primary { border-color: rgba(99, 102, 241, 0.3); }
+.stat-card-danger { border-color: rgba(239, 68, 68, 0.3); }
+.stat-card-success { border-color: rgba(16, 185, 129, 0.3); }
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.stat-card-danger .stat-icon {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    color: var(--danger);
+}
+
+.stat-card-success .stat-icon {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: var(--success);
+}
+
+.stat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.stat-card-primary .stat-value {
+    color: var(--primary);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    color: white;
+}
+
+.btn-gradient-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+    color: white;
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#rrPlaceholder {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
+    border-radius: 0.75rem;
+    border: 2px dashed #e2e8f0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('tradeForm');
+    const resetBtn = document.getElementById('resetBtn');
+    const entryPriceField = document.querySelector('[name="entry_price"]');
+    const stopLossField = document.querySelector('[name="stop_loss"]');
+    const targetField = document.querySelector('[name="target"]');
+    const quantityField = document.querySelector('[name="quantity"]');
+    const tradeTypeField = document.querySelector('[name="trade_type"]');
+    
+    const rrCalculator = document.getElementById('rrCalculator');
+    const rrPlaceholder = document.getElementById('rrPlaceholder');
+    const rrRatio = document.getElementById('rrRatio');
+    const totalRisk = document.getElementById('totalRisk');
+    const totalReward = document.getElementById('totalReward');
+
+    function calculateRiskReward() {
+        const entryPrice = parseFloat(entryPriceField?.value) || 0;
+        const stopLoss = parseFloat(stopLossField?.value) || 0;
+        const target = parseFloat(targetField?.value) || 0;
+        const quantity = parseFloat(quantityField?.value) || 0;
+        const tradeType = tradeTypeField?.value?.toUpperCase() || 'BUY';
+
+        // Check if all required fields are filled
+        if (entryPrice <= 0 || stopLoss <= 0 || target <= 0 || quantity <= 0) {
+            rrCalculator.style.display = 'none';
+            rrPlaceholder.style.display = 'block';
+            return;
+        }
+
+        let risk, reward;
+
+        // Calculate based on trade type
+        if (tradeType === 'BUY' || tradeType === 'LONG') {
+            risk = entryPrice - stopLoss;
+            reward = target - entryPrice;
+        } else {
+            risk = stopLoss - entryPrice;
+            reward = entryPrice - target;
+        }
+
+        // Validate calculations
+        if (risk <= 0 || reward <= 0) {
+            rrCalculator.style.display = 'none';
+            rrPlaceholder.style.display = 'block';
+            return;
+        }
+
+        // Show calculator
+        rrCalculator.style.display = 'block';
+        rrPlaceholder.style.display = 'none';
+
+        // Calculate ratio
+        const ratio = (reward / risk).toFixed(2);
+        rrRatio.textContent = `1:${ratio}`;
+
+        // Update colors based on ratio
+        if (ratio >= 2) {
+            rrRatio.style.color = '#10b981';
+        } else if (ratio < 1) {
+            rrRatio.style.color = '#ef4444';
+        } else {
+            rrRatio.style.color = '#6366f1';
+        }
+
+        // Calculate totals
+        const totalRiskAmount = (risk * quantity).toFixed(2);
+        const totalRewardAmount = (reward * quantity).toFixed(2);
+
+        totalRisk.textContent = `₹${parseFloat(totalRiskAmount).toLocaleString('en-IN')}`;
+        totalReward.textContent = `₹${parseFloat(totalRewardAmount).toLocaleString('en-IN')}`;
+    }
+
+    // Reset button handler
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Reset the form
+            form.reset();
+            
+            // Hide calculator and show placeholder
+            rrCalculator.style.display = 'none';
+            rrPlaceholder.style.display = 'block';
+            
+            // Reset stat values
+            rrRatio.textContent = '--';
+            totalRisk.textContent = '₹0';
+            totalReward.textContent = '₹0';
+        });
+    }
+
+    // Add event listeners
+    if (entryPriceField) entryPriceField.addEventListener('input', calculateRiskReward);
+    if (stopLossField) stopLossField.addEventListener('input', calculateRiskReward);
+    if (targetField) targetField.addEventListener('input', calculateRiskReward);
+    if (quantityField) quantityField.addEventListener('input', calculateRiskReward);
+    if (tradeTypeField) tradeTypeField.addEventListener('change', calculateRiskReward);
+
+    // Initial calculation
+    calculateRiskReward();
+});
+</script>
 {% endblock %}
