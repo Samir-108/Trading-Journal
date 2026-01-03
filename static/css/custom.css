@@ -776,7 +776,7 @@ body {
 	font-family: "Poppins", sans-serif;
 }
 
-.testimonial-card:hover {
+.testimonial-card:hover {   
 	transform: translateY(-5px);
 	box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
 }

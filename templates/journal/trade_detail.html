@@ -1,125 +1,185 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center animate-fade-up">
-        <div class="col-lg-10">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb bg-transparent p-0">
-                    <li class="breadcrumb-item"><a href="{% url 'trade_list' %}" class="text-decoration-none"><i
-                                class="bi bi-house-door me-1"></i>Journal</a></li>
-                    <li class="breadcrumb-item active">Trade Details</li>
-                </ol>
-            </nav>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <!-- Header with back button -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <a href="{% url 'trade_list' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Journal
+                    </a>
+                </div>
+                <h4 class="mb-0 text-muted">Trade Details</h4>
+            </div>
 
-            <!-- Trade Header -->
-            <div class="glass-card p-5 mb-4">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <h1 class="fw-bold text-primary mb-0">{{ trade.symbol }}</h1>
-                            <span
-                                class="badge {% if trade.trade_type == 'BUY' %}bg-success{% else %}bg-danger{% endif %} bg-opacity-10 {% if trade.trade_type == 'BUY' %}text-success{% else %}text-danger{% endif %} rounded-pill px-3 py-2">
-                                <i
-                                    class="bi {% if trade.trade_type == 'BUY' %}bi-arrow-up-circle{% else %}bi-arrow-down-circle{% endif %} me-1"></i>
-                                {{ trade.trade_type }}
-                            </span>
-                            <span
-                                class="badge {% if trade.status == 'OPEN' %}bg-primary{% else %}bg-secondary{% endif %} bg-opacity-10 {% if trade.status == 'OPEN' %}text-primary{% else %}text-secondary{% endif %} rounded-pill px-3 py-2">
-                                {{ trade.status }}
-                            </span>
+            <!-- Trade Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <!-- Trade Header -->
+                <div class="card-header bg-white border-0 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <h2 class="h1 fw-bold mb-0">{{ trade.symbol }}</h2>
+                                <div class="d-flex gap-2">
+                                    <span class="badge {% if trade.trade_type == 'BUY' %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} px-3 py-2">
+                                        <i class="bi {% if trade.trade_type == 'BUY' %}bi-arrow-up-circle{% else %}bi-arrow-down-circle{% endif %} me-1"></i>
+                                        {{ trade.trade_type }}
+                                    </span>
+                                    <span class="badge {% if trade.status == 'OPEN' %}bg-primary-subtle text-primary{% else %}bg-secondary-subtle text-secondary{% endif %} px-3 py-2">
+                                        {{ trade.status }}
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                {{ trade.entry_date|date:"F d, Y - h:i A" }}
+                            </p>
                         </div>
-                        <p class="text-muted mb-0">
-                            <i class="bi bi-calendar3 me-2"></i>
-                            {{ trade.entry_date|date:"F d, Y - h:i A" }}
-                        </p>
-                    </div>
-                    <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
                         {% if trade.pnl %}
-                        <p class="text-uppercase small fw-bold text-muted mb-2">Profit/Loss</p>
-                        <h2
-                            class="display-4 fw-bold {% if trade.pnl > 0 %}text-success{% elif trade.pnl < 0 %}text-danger{% else %}text-muted{% endif %} mb-0">
-                            {% if trade.pnl > 0 %}+{% endif %}Rs. {{ trade.pnl }}
-                        </h2>
+                        <div class="text-end">
+                            <p class="text-muted small mb-1">P&L</p>
+                            <h3 class="{% if trade.pnl > 0 %}text-success{% elif trade.pnl < 0 %}text-danger{% else %}text-muted{% endif %} mb-0 fw-bold">
+                                {% if trade.pnl > 0 %}+{% endif %}₹{{ trade.pnl|floatformat:2 }}
+                            </h3>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
-            </div>
 
-            <!-- Trade Details -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-6">
-                    <div class="glass-card p-4 h-100">
-                        <h5 class="fw-bold text-primary mb-4">Entry Details</h5>
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Entry Price</p>
-                                <p class="fw-bold mb-0">Rs. {{ trade.entry_price }}</p>
+                <!-- Trade Body -->
+                <div class="card-body p-0">
+                    <!-- Main Details -->
+                    <div class="row g-0">
+                        <div class="col-md-6 p-4 border-end">
+                            <h6 class="fw-bold text-primary mb-3">Entry Details</h6>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Entry Price</p>
+                                    <p class="fw-semibold mb-0">₹{{ trade.entry_price|floatformat:2 }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Quantity</p>
+                                    <p class="fw-semibold mb-0">{{ trade.quantity }} units</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Stop Loss</p>
+                                    <p class="fw-semibold mb-0">
+                                        {% if trade.stop_loss %}
+                                            ₹{{ trade.stop_loss|floatformat:2 }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Target</p>
+                                    <p class="fw-semibold mb-0">
+                                        {% if trade.target %}
+                                            ₹{{ trade.target|floatformat:2 }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Quantity</p>
-                                <p class="fw-bold mb-0">{{ trade.quantity }} units</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Stop Loss</p>
-                                <p class="fw-bold mb-0">{% if trade.stop_loss %}Rs. {{ trade.stop_loss }}{% else %}-{%
-                                    endif %}</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Target</p>
-                                <p class="fw-bold mb-0">{% if trade.target %}Rs. {{ trade.target }}{% else %}-{% endif
-                                    %}</p>
+                        </div>
+
+                        <div class="col-md-6 p-4">
+                            <h6 class="fw-bold text-primary mb-3">Exit Details</h6>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Exit Price</p>
+                                    <p class="fw-semibold mb-0">
+                                        {% if trade.exit_price %}
+                                            ₹{{ trade.exit_price|floatformat:2 }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Exit Date</p>
+                                    <p class="fw-semibold mb-0">
+                                        {% if trade.exit_date %}
+                                            {{ trade.exit_date|date:"M d, Y" }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Strategy</p>
+                                    <p class="fw-semibold mb-0">{{ trade.strategy.name|default:"-" }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted small mb-1">Emotion</p>
+                                    <p class="fw-semibold mb-0">{{ trade.get_emotion_display|default:"-" }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Notes Section -->
+                    {% if trade.notes %}
+                    <div class="border-top p-4">
+                        <h6 class="fw-bold text-primary mb-3">Notes</h6>
+                        <div class="bg-light rounded p-3">
+                            <p class="mb-0">{{ trade.notes }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
 
-                <div class="col-md-6">
-                    <div class="glass-card p-4 h-100">
-                        <h5 class="fw-bold text-primary mb-4">Exit Details</h5>
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Exit Price</p>
-                                <p class="fw-bold mb-0">{% if trade.exit_price %}Rs. {{ trade.exit_price }}{% else %}-{%
-                                    endif %}</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Exit Date</p>
-                                <p class="fw-bold mb-0">{% if trade.exit_date %}{{ trade.exit_date|date:"M d, Y" }}{%
-                                    else %}-{% endif %}</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Strategy</p>
-                                <p class="fw-bold mb-0">{{ trade.strategy.name|default:"-" }}</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1">Emotion</p>
-                                <p class="fw-bold mb-0">{{ trade.get_emotion_display }}</p>
-                            </div>
+                <!-- Action Buttons -->
+                <div class="card-footer bg-white border-0 p-4 pt-0">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'trade_list' %}" class="btn btn-outline-success">
+                            <i class="bi bi-check2-circle"></i>Done
+                        </a>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'trade_update' trade.pk %}" class="btn btn-light">
+                                <i class="bi bi-pencil me-2"></i>Edit Trade
+                            </a>
+                            <a href="{% url 'trade_delete' trade.pk %}" class="btn btn-outline-danger">
+                                <i class="bi bi-trash me-2"></i>Delete
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Notes -->
-            {% if trade.notes %}
-            <div class="glass-card p-4 mb-4">
-                <h5 class="fw-bold text-primary mb-3">Notes</h5>
-                <p class="text-muted mb-0">{{ trade.notes }}</p>
-            </div>
-            {% endif %}
-
-            <!-- Actions -->
-            <div class="d-flex gap-2 justify-content-end">
-                <a href="{% url 'trade_update' trade.pk %}" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil me-2"></i>Edit
-                </a>
-                <a href="{% url 'trade_delete' trade.pk %}" class="btn btn-outline-danger">
-                    <i class="bi bi-trash me-2"></i>Delete
-                </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        border-radius: 12px;
+    }
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+    .badge {
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .fw-semibold {
+        font-weight: 600;
+    }
+    .bg-success-subtle {
+        background-color: rgba(25, 135, 84, 0.1) !important;
+    }
+    .bg-danger-subtle {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+    .bg-primary-subtle {
+        background-color: rgba(13, 110, 253, 0.1) !important;
+    }
+    .bg-secondary-subtle {
+        background-color: rgba(108, 117, 125, 0.1) !important;
+    }
+</style>
 {% endblock %}

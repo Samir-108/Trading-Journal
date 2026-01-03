@@ -9,14 +9,14 @@
                 <i class="bi bi-journal-text text-primary me-2"></i>
                 <span class="gradient-text">Trade Journal</span>
             </h2>
-            <p class="text-muted mb-0 fs-5">Complete history of all your trades</p>
+            <p class="text-muted mb-0 fs-5">History of your trades</p>
         </div>
         <div class="d-flex gap-3">
             <button class="btn btn-modern btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <i class="bi bi-funnel me-2"></i>Filter
             </button>
             <a href="{% url 'trade_create' %}" class="btn btn-modern btn-gradient-primary">
-                <i class="bi bi-plus-lg me-2"></i>Log Trade
+                <i class="bi bi-plus-lg me-2"></i>Add a New Trade
             </a>
         </div>
     </div>
@@ -87,7 +87,7 @@
                 <h5 class="fw-bold mb-1">
                     <i class="bi bi-list-check text-primary me-2"></i>All Trades
                 </h5>
-                <p class="text-muted small mb-0">Complete trading history with details</p>
+                <p class="text-muted small mb-0">Trade history with details</p>
             </div>
             <div class="btn-group btn-group-sm" role="group">
                 <button type="button" class="btn btn-outline-secondary active">All</button>
@@ -156,7 +156,7 @@
                             </td>
                             <td>
                                 {% if trade.emotion %}
-                                <span class="badge badge-modern bg-purple bg-opacity-10" style="color: #764ba2;">
+                                <span class="badge badge-modern bg-purple bg-opacity-10" style="color: #1c181f;">
                                     {{ trade.emotion }}
                                 </span>
                                 {% else %}
@@ -179,11 +179,8 @@
                             </td>
                             <td class="pe-4 text-end">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{% url 'trade_detail' trade.pk %}" class="btn btn-outline-info" title="View Details">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
                                     <a href="{% url 'trade_update' trade.pk %}" class="btn btn-outline-warning" title="Edit">
-                                        <i class="bi bi-pencil"></i>
+                                        <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <a href="{% url 'trade_delete' trade.pk %}" class="btn btn-outline-danger" title="Delete">
                                         <i class="bi bi-trash"></i>
@@ -235,9 +232,8 @@
                     <div class="mb-3">
                         <label class="form-label">Trade Type</label>
                         <select class="form-select" name="type">
-                            <option value="">All</option>
-                            <option value="BUY">Buy</option>
-                            <option value="SELL">Sell</option>
+                            <option value="BUY/Long">Buy</option>
+                            <option value="SELL/Short">Sell</option>
                         </select>
                     </div>
                     <div class="mb-3">
