@@ -72,6 +72,13 @@ class Trade(models.Model):
             return diff * self.quantity
         return None
 
+    @property
+    def return_percentage(self):
+        if self.pnl and self.entry_price:
+            total_cost = self.entry_price * self.quantity
+            return (self.pnl / total_cost) * 100 if total_cost > 0 else 0
+        return None
+
 class TradeImage(models.Model):
     trade = models.ForeignKey(Trade, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='trade_images/')

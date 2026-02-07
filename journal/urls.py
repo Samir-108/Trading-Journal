@@ -7,6 +7,9 @@ urlpatterns = [
     path('<int:pk>/', views.trade_detail, name='trade_detail'),
     path('<int:pk>/edit/', views.trade_update, name='trade_update'),
     path('<int:pk>/delete/', views.trade_delete, name='trade_delete'),
+    path('<int:pk>/upload-chart/', views.upload_trade_chart, name='upload_trade_chart'),
+    path('<int:pk>/images/', views.trade_images, name='trade_images'),
+    path('<int:pk>/images/<int:img_id>/delete/', views.delete_trade_image, name='delete_trade_image'),
     
     path('strategies/', views.strategy_list, name='strategy_list'),
     path('strategies/add/', views.strategy_create, name='strategy_create'),

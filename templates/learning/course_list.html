@@ -3,16 +3,13 @@
 {% block content %}
 <div class="container-fluid px-4">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-up">
+    <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h2 class="fw-bold mb-2">
-                <i class="bi bi-mortarboard text-primary me-2"></i>
-                <span class="gradient-text">Learning Academy</span>
-            </h2>
-            <p class="text-muted fs-5 mb-0">Master trading skills with our curated courses and tutorials</p>
+            <h2 class="fw-bold mb-2">Learning Academy</h2>
+            <p class="text-muted mb-0">Master trading skills with our curated courses</p>
         </div>
         {% if user.is_superuser %}
-        <a href="{% url 'course_create' %}" class="btn btn-modern btn-gradient-primary">
+        <a href="{% url 'course_create' %}" class="btn btn-primary">
             <i class="bi bi-plus-lg me-2"></i>Create Course
         </a>
         {% endif %}
@@ -20,82 +17,62 @@
 
     <!-- Overall Progress Stats -->
     <div class="row g-4 mb-5">
-        <div class="col-lg-3 col-md-6 animate-fade-up">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-2 tracking-wide">Total Courses</p>
-                        <h2 class="stats-number">{{ total_courses }}</h2>
-                    </div>
-                    <div class="feature-icon">
-                        <i class="bi bi-book-fill"></i>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Total Courses</p>
+                    <h3 class="mb-0">{{ total_courses }}</h3>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 animate-fade-up delay-100">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-2 tracking-wide">Total Lessons</p>
-                        <h2 class="stats-number">{{ total_lessons }}</h2>
-                    </div>
-                    <div class="feature-icon" style="background: var(--green-gradient);">
-                        <i class="bi bi-play-circle-fill text-white"></i>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Total Lessons</p>
+                    <h3 class="mb-0">{{ total_lessons }}</h3>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 animate-fade-up delay-200">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-2 tracking-wide">Completed</p>
-                        <h2 class="stats-number text-success">{{ completed_lessons }}</h2>
-                    </div>
-                    <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        <i class="bi bi-check-circle-fill text-white"></i>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Completed</p>
+                    <h3 class="text-success mb-0">{{ completed_lessons }}</h3>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 animate-fade-up delay-300">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <p class="text-uppercase text-muted small fw-bold mb-2 tracking-wide">Overall Progress</p>
-                        <h2 class="stats-number text-primary">{{ overall_progress }}%</h2>
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Overall Progress</p>
+                    <h3 class="text-primary mb-3">{{ overall_progress }}%</h3>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ overall_progress }}%"></div>
                     </div>
-                    <div class="feature-icon" style="background: var(--orange-gradient);">
-                        <i class="bi bi-trophy-fill text-white"></i>
-                    </div>
-                </div>
-                <div class="progress mt-3" style="height: 8px;">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ overall_progress }}%"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Categories -->
-    <div class="mb-5 animate-fade-up delay-400">
+    <div class="mb-5">
         <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-modern btn-outline-primary active">
+            <button class="btn btn-primary btn-sm">
                 <i class="bi bi-grid me-2"></i>All Courses
             </button>
-            <button class="btn btn-modern btn-outline-secondary">
+            <button class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-graph-up me-2"></i>Technical Analysis
             </button>
-            <button class="btn btn-modern btn-outline-secondary">
+            <button class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-lightbulb me-2"></i>Trading Psychology
             </button>
-            <button class="btn btn-modern btn-outline-secondary">
+            <button class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-shield-check me-2"></i>Risk Management
             </button>
-            <button class="btn btn-modern btn-outline-secondary">
+            <button class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-graph-down me-2"></i>Market Analysis
             </button>
         </div>
@@ -104,118 +81,74 @@
     <!-- Courses Grid -->
     <div class="row g-4">
         {% for data in courses_data %}
-        <div class="col-lg-4 col-md-6 animate-fade-up delay-{{ forloop.counter }}00">
-            <div class="feature-card position-relative overflow-hidden h-100">
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100">
                 <!-- Thumbnail -->
                 {% if data.course.thumbnail %}
-                <div class="position-relative overflow-hidden" style="height: 240px;">
-                    <img src="{{ data.course.thumbnail.url }}" class="w-100 h-100" alt="{{ data.course.title }}"
-                        style="object-fit: cover; transition: transform 0.3s ease;">
-                </div>
+                <img src="{{ data.course.thumbnail.url }}" class="card-img-top" alt="{{ data.course.title }}" style="height: 200px; object-fit: cover;">
                 {% else %}
-                <div class="d-flex align-items-center justify-content-center position-relative"
-                    style="height: 240px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <i class="bi bi-mortarboard fs-1 text-white opacity-75"></i>
-                </div>
-                {% endif %}
-
-                <!-- Admin Actions -->
-                {% if user.is_superuser %}
-                <div class="position-absolute top-0 end-0 p-3" style="z-index: 10;">
-                    <div class="dropdown">
-                        <button class="btn btn-light btn-sm rounded-circle shadow" type="button"
-                            data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
-                            <li><a class="dropdown-item" href="{% url 'course_update' data.course.pk %}">
-                                <i class="bi bi-pencil me-2 text-primary"></i>Edit Course
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'course_delete' data.course.pk %}">
-                                <i class="bi bi-trash me-2"></i>Delete
-                            </a></li>
-                        </ul>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Badge -->
-                {% if data.progress_percent > 0 %}
-                <div class="position-absolute top-0 start-0 p-3" style="z-index: 10;">
-                    <span class="badge badge-modern {% if data.progress_percent == 100 %}bg-success{% else %}bg-warning{% endif %} bg-opacity-90 text-white">
-                        <i class="bi {% if data.progress_percent == 100 %}bi-check-circle-fill{% else %}bi-clock-history{% endif %} me-1"></i>
-                        {% if data.progress_percent == 100 %}Completed{% else %}In Progress{% endif %}
-                    </span>
-                </div>
-                {% else %}
-                <div class="position-absolute top-0 start-0 p-3" style="z-index: 10;">
-                    <span class="badge badge-modern bg-info bg-opacity-90 text-white">
-                        <i class="bi bi-star-fill me-1"></i>New
-                    </span>
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-mortarboard text-muted" style="font-size: 3rem;"></i>
                 </div>
                 {% endif %}
 
                 <!-- Content -->
-                <div class="card-body p-4 d-flex flex-column">
+                <div class="card-body d-flex flex-column">
                     <div class="mb-3">
-                        <h5 class="card-title fw-bold mb-2">{{ data.course.title }}</h5>
-                        <p class="card-text text-muted mb-0">{{ data.course.description|truncatewords:15 }}</p>
+                        <h5 class="card-title">{{ data.course.title }}</h5>
+                        <p class="card-text text-muted small">{{ data.course.description|truncatewords:15 }}</p>
                     </div>
 
                     <!-- Meta Info -->
-                    <div class="d-flex gap-3 mb-4 flex-wrap">
-                        <div class="text-muted small">
-                            <i class="bi bi-book-half text-primary me-1"></i>
-                            <span class="fw-medium">{{ data.total_lessons }} Lessons</span>
-                        </div>
-                        <div class="text-muted small">
-                            <i class="bi bi-clock text-info me-1"></i>
-                            <span class="fw-medium">{{ data.duration_str }}</span>
-                        </div>
-                        <div class="text-muted small">
-                            <i class="bi bi-bar-chart text-success me-1"></i>
-                            <span class="fw-medium">All Levels</span>
-                        </div>
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-book-half me-1"></i>{{ data.total_lessons }} Lessons •
+                            <i class="bi bi-clock me-1"></i>{{ data.duration_str }}
+                        </small>
                     </div>
 
                     <!-- Progress Bar -->
+                    {% if data.progress_percent > 0 %}
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small class="text-muted fw-medium">Your Progress</small>
-                            <small class="fw-bold {% if data.progress_percent == 100 %}text-success{% else %}text-primary{% endif %}">
-                                {{ data.progress_percent }}%
-                            </small>
+                            <small class="text-muted">Your Progress</small>
+                            <small class="fw-bold">{{ data.progress_percent }}%</small>
                         </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar {% if data.progress_percent == 100 %}bg-success{% else %}bg-primary{% endif %}" 
-                                 role="progressbar" style="width: {{ data.progress_percent }}%"></div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar" role="progressbar" style="width: {{ data.progress_percent }}%"></div>
                         </div>
-                        <small class="text-muted mt-1 d-block">{{ data.completed_lessons }}/{{ data.total_lessons }} completed</small>
                     </div>
+                    {% endif %}
 
                     <!-- Action Button -->
-                    <a href="{% url 'course_detail' data.course.pk %}" class="btn btn-modern btn-gradient-primary w-100 mt-auto">
-                        <i class="bi {% if data.progress_percent > 0 %}bi-arrow-right-circle{% else %}bi-play-circle{% endif %} me-2"></i>
+                    <a href="{% url 'course_detail' data.course.pk %}" class="btn btn-primary btn-sm mt-auto">
                         {% if data.progress_percent == 100 %}Review Course{% elif data.progress_percent > 0 %}Continue Learning{% else %}Start Learning{% endif %}
                     </a>
+
+                    <!-- Admin Actions -->
+                    {% if user.is_superuser %}
+                    <div class="mt-2">
+                        <a href="{% url 'course_update' data.course.pk %}" class="btn btn-outline-secondary btn-sm w-100 mb-2">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'course_delete' data.course.pk %}" class="btn btn-outline-danger btn-sm w-100">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="col-12 text-center py-5 animate-fade-up">
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="bi bi-mortarboard"></i>
-                </div>
-                <h4 class="fw-bold mb-3">No Courses Available Yet</h4>
-                <p class="text-muted lead mb-4">We're working on bringing you amazing learning content!</p>
-                {% if user.is_superuser %}
-                <a href="{% url 'course_create' %}" class="btn btn-modern btn-gradient-primary">
-                    <i class="bi bi-plus-lg me-2"></i>Create First Course
-                </a>
-                {% endif %}
-            </div>
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-mortarboard" style="font-size: 3rem; color: #ccc;"></i>
+            <h4 class="fw-bold mt-3 mb-2">No Courses Available Yet</h4>
+            <p class="text-muted mb-4">We're working on bringing you amazing learning content!</p>
+            {% if user.is_superuser %}
+            <a href="{% url 'course_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Create First Course
+            </a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
@@ -224,27 +157,18 @@
     {% if courses %}
     <div class="row g-4 mt-5">
         <div class="col-12">
-            <div class="glass-card p-5 text-center">
+            <div class="card p-5 text-center">
                 <h3 class="fw-bold mb-4">Why Continuous Learning Matters</h3>
                 <div class="row g-4">
                     <div class="col-md-4">
-                        <div class="feature-icon mx-auto mb-3" style="background: var(--blue-gradient);">
-                            <i class="bi bi-trophy text-white"></i>
-                        </div>
                         <h5 class="fw-bold mb-2">Improve Performance</h5>
                         <p class="text-muted">Better knowledge leads to better trading decisions</p>
                     </div>
                     <div class="col-md-4">
-                        <div class="feature-icon mx-auto mb-3" style="background: var(--green-gradient);">
-                            <i class="bi bi-shield-check text-white"></i>
-                        </div>
                         <h5 class="fw-bold mb-2">Reduce Risks</h5>
                         <p class="text-muted">Learn to protect your capital effectively</p>
                     </div>
                     <div class="col-md-4">
-                        <div class="feature-icon mx-auto mb-3" style="background: var(--purple-gradient);">
-                            <i class="bi bi-graph-up-arrow text-white"></i>
-                        </div>
                         <h5 class="fw-bold mb-2">Increase Profits</h5>
                         <p class="text-muted">Advanced strategies for consistent returns</p>
                     </div>
@@ -254,10 +178,4 @@
     </div>
     {% endif %}
 </div>
-
-<style>
-.feature-card:hover img {
-    transform: scale(1.05);
-}
-</style>
 {% endblock %}
