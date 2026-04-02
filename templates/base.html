@@ -26,66 +26,73 @@
 <body>
 
     {% if user.is_authenticated %}
-    <nav class="navbar navbar-expand-lg fixed-top glass-navbar">
+    <nav class="navbar navbar-expand-md fixed-top glass-navbar px-3">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold text-success" href="{% url 'dashboard' %}">
-                <i class="bi bi-graph-up-arrow"></i> Nepse Diary
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <!-- Mobile Menu Toggler -->
+            <button class="navbar-toggler border-0 shadow-none me-2 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            {% if user.profile_picture %}
-                            <img src="{{ user.profile_picture.url }}" class="rounded-circle" width="32" height="32">
-                            {% else %}
-                            <i class="bi bi-person-circle fs-5"></i>
-                            {% endif %}
-                            <span class="ms-2">{{ user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form action="{% url 'logout' %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="dropdown-item text-danger"><i
-                                            class="bi bi-box-arrow-right me-2"></i>Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            
+            <a class="navbar-brand fw-bold text-success me-auto transition-transform" href="{% url 'dashboard' %}">
+                <i class="bi bi-graph-up-arrow"></i> Nepse Diary
+            </a>
+            
+            <!-- Always visible profile dropdown on all screens -->
+            <ul class="navbar-nav flex-row align-items-center">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center border-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" class="rounded-circle shadow-sm" width="36" height="36" alt="Profile">
+                        {% else %}
+                        <i class="bi bi-person-circle fs-4 text-secondary"></i>
+                        {% endif %}
+                        <span class="ms-2 d-none d-sm-inline fw-semibold">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow dropdown-menu-animated position-absolute border-radius-xl mt-2">
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-3 text-secondary"></i>My Profile</a></li>
+                        <li><hr class="dropdown-divider opacity-50"></li>
+                        <li>
+                            <form action="{% url 'logout' %}" method="post" class="m-0">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-danger py-2"><i class="bi bi-box-arrow-right me-3"></i>Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </nav>
 
-    <div class="sidebar d-none d-md-block glass-sidebar">
-        <div class="d-flex flex-column h-100">
-            <ul class="nav flex-column mt-3">
+    <!-- Offcanvas Sidebar Component -->
+    <div class="offcanvas-md offcanvas-start glass-sidebar" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+        <div class="offcanvas-header border-bottom d-md-none px-4 py-3">
+            <h5 class="offcanvas-title text-success fw-bold m-0" id="sidebarMenuLabel"><i class="bi bi-graph-up-arrow me-2"></i> Nepse Diary</h5>
+            <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-md-flex flex-column p-0 h-100">
+            <ul class="nav flex-column mt-0 mt-md-4 w-100 px-3 px-md-2 py-3 py-md-0 gap-2">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
-                        href="{% url 'dashboard' %}">
-                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    <a class="nav-link rounded-3 {% if request.resolver_match.url_name == 'dashboard' %}active text-white shadow-primary{% endif %}"
+                        href="{% url 'dashboard' %}" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu">
+                        <i class="bi bi-speedometer2 me-3 fs-5"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'trade_list' %}">
-                        <i class="bi bi-journal-text me-2"></i> Trade Journal
+                    <a class="nav-link rounded-3 {% if 'trade' in request.resolver_match.url_name %}active text-white shadow-primary{% endif %}" 
+                       href="{% url 'trade_list' %}" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu">
+                        <i class="bi bi-journal-text me-3 fs-5"></i> Trade Journal
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'portfolio_dashboard' %}">
-                        <i class="bi bi-wallet2 me-2"></i> Portfolio
+                    <a class="nav-link rounded-3 {% if 'portfolio' in request.resolver_match.url_name %}active text-white shadow-primary{% endif %}" 
+                       href="{% url 'portfolio_dashboard' %}" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu">
+                        <i class="bi bi-wallet2 me-3 fs-5"></i> Portfolio
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'course_list' %}">
-                        <i class="bi bi-mortarboard me-2"></i> Learning
+                    <a class="nav-link rounded-3 {% if 'course' in request.resolver_match.url_name %}active text-white shadow-primary{% endif %}" 
+                       href="{% url 'course_list' %}" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu">
+                        <i class="bi bi-mortarboard me-3 fs-5"></i> Learning
                     </a>
                 </li>
             </ul>
@@ -93,23 +100,34 @@
     </div>
     {% else %}
     <!-- Public Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top glass-navbar">
+    <nav class="navbar navbar-expand-lg fixed-top glass-navbar p-3 transition-all">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="{% url 'home' %}">
-                <i class="bi bi-graph-up-arrow"></i> Nepse Diary
+            <a class="navbar-brand fw-bold text-primary gradient-text fs-4" href="{% url 'home' %}">
+                <i class="bi bi-graph-up-arrow me-1"></i> Nepse Diary
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav">
+            
+            <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#publicNavCanvas">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <ul class="navbar-nav ms-auto align-items-center gap-3">
-    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-    <li class="nav-item"><a class="nav-link" href="{% url 'pricing' %}">Pricing</a></li>
-    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-    <li class="nav-item">
-        <a class="btn btn-primary text-white" href="{% url 'register' %}">Get Started</a>
-    </li>
-</ul>
+            
+            <div class="offcanvas offcanvas-end glass-bg-blur" tabindex="-1" id="publicNavCanvas" aria-labelledby="publicNavCanvasLabel">
+                <div class="offcanvas-header border-bottom px-4 py-3">
+                    <h5 class="offcanvas-title text-primary fw-bold gradient-text m-0" id="publicNavCanvasLabel"><i class="bi bi-graph-up-arrow me-2"></i> Nepse Diary</h5>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body px-4 px-lg-0 py-4 py-lg-0">
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-3 w-100">
+                        <li class="nav-item"><a class="nav-link fw-medium" href="#features" data-bs-dismiss="offcanvas">Features</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="{% url 'pricing' %}" data-bs-dismiss="offcanvas">Pricing</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="{% url 'about' %}" data-bs-dismiss="offcanvas">About</a></li>
+                        <li class="nav-item d-lg-none mt-2"><hr class="opacity-25 my-0"></li>
+                        <li class="nav-item"><a class="nav-link fw-medium text-dark" href="{% url 'login' %}" data-bs-dismiss="offcanvas">Log in</a></li>
+                        <li class="nav-item d-flex mt-3 mt-lg-0 ms-lg-2">
+                            <a class="btn btn-primary text-white w-100 px-4 rounded-pill shadow-sm" href="{% url 'register' %}">Get Started</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </nav>
     {% endif %}
@@ -187,15 +205,19 @@
     <!-- Enhanced JavaScript for better UX -->
     <script>
         // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                try {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                } catch (err) {
+                    console.warn("Smooth scroll failed for", this.getAttribute('href'));
                 }
             });
         });
